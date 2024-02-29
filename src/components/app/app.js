@@ -7,10 +7,11 @@ import { Component } from "react";
 export default class App extends Component {
   state = {
     data: [
-      { id: 1, classItem: "", description: "Completed task" },
-      { id: 2, classItem: "", description: "Editing task" },
-      { id: 3, classItem: "", description: "Active task" },
+      { id: 1, classItem: "", description: "Completed task", hidden: "" },
+      { id: 2, classItem: "", description: "Editing task", hidden: "" },
+      { id: 3, classItem: "", description: "Active task", hidden: "" },
     ],
+    numItemsLeft: "",
   };
 
   onDone = (id) => {
@@ -26,8 +27,62 @@ export default class App extends Component {
     });
   };
 
+  onClearDone = () => {
+    const activeItems = this.state.data.filter(
+      (el) => el.classItem !== "completed"
+    );
+
+    this.setState({
+      data: activeItems,
+    });
+  };
+
   onDeleted = (id) => {
     const newArr = this.state.data.filter((el) => el.id !== id);
+
+    this.setState({
+      data: newArr,
+    });
+  };
+
+  onAdded = (description) => {
+    const randomNum = Math.floor(Math.random() * 1000);
+
+    const newItem = {
+      id: randomNum,
+      classItem: "",
+      description: description,
+      hidden: "",
+    };
+
+    const newArr = this.state.data.concat(newItem);
+
+    this.setState({
+      data: newArr,
+    });
+  };
+
+  onToggleFilter = (status) => {
+    let newArr = this.state.data.map((el) => {
+      el.hidden = "";
+      return el;
+    });
+
+    if (status === "Active") {
+      newArr = this.state.data.map((el) => {
+        if (el.classItem === "completed") {
+          el.hidden = "hidden";
+        }
+        return el;
+      });
+    } else if (status === "Completed") {
+      newArr = this.state.data.map((el) => {
+        if (el.classItem !== "completed") {
+          el.hidden = "hidden";
+        }
+        return el;
+      });
+    }
 
     this.setState({
       data: newArr,
@@ -39,7 +94,7 @@ export default class App extends Component {
       <>
         <header className="header">
           <h1>todos</h1>
-          <NewTaskForm />
+          <NewTaskForm onAdded={this.onAdded} />
         </header>
         <section className="main">
           <TaskList
@@ -48,7 +103,13 @@ export default class App extends Component {
             deleted={this.onDeleted}
           />
         </section>
-        <Footer />
+        <Footer
+          onClearDone={this.onClearDone}
+          numItemsLeft={
+            this.state.data.filter((el) => el.classItem !== "completed").length
+          }
+          onToggleFilter={this.onToggleFilter}
+        />
       </>
     );
   }

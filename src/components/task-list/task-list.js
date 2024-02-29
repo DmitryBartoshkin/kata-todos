@@ -7,7 +7,7 @@ export default class TaskList extends Component {
     const { dataTodo, onDone, deleted } = this.props;
     const listItems = dataTodo.map((el) => {
       return (
-        <li className={el.classItem} key={el.id}>
+        <li className={el.classItem} key={el.id} hidden={el.hidden}>
           <Task
             description={el.description}
             onDone={() => onDone(el.id)}
