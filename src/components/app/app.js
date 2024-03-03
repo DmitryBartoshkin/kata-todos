@@ -3,15 +3,11 @@ import Footer from "../footer";
 import TaskList from "../task-list";
 import "./app.css";
 import { Component } from "react";
+import { formatDistanceToNow } from "date-fns";
 
 export default class App extends Component {
   state = {
-    data: [
-      { id: 1, classItem: "", description: "Completed task", hidden: "" },
-      { id: 2, classItem: "", description: "Editing task", hidden: "" },
-      { id: 3, classItem: "", description: "Active task", hidden: "" },
-    ],
-    numItemsLeft: "",
+    data: [],
   };
 
   onDone = (id) => {
@@ -46,16 +42,24 @@ export default class App extends Component {
   };
 
   onAdded = (description) => {
-    const randomNum = Math.floor(Math.random() * 1000);
+    const randomNum = Math.floor(Math.random() * 10000);
 
     const newItem = {
       id: randomNum,
       classItem: "",
       description: description,
       hidden: "",
+      timeAdded: new Date(),
+      timeFromAdded: "",
     };
 
     const newArr = this.state.data.concat(newItem);
+    newArr.forEach(
+      (el) =>
+        (el.timeFromAdded = formatDistanceToNow(el.timeAdded, {
+          includeSeconds: true,
+        }))
+    );
 
     this.setState({
       data: newArr,

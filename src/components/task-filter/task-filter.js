@@ -1,7 +1,16 @@
 import { Component } from "react";
 import "./task-filter.css";
+import PropTypes from "prop-types";
 
 export default class TaskFilter extends Component {
+  static defaultProps = {
+    onToggleFilter: () => {},
+  };
+
+  static propTypes = {
+    onToggleFilter: PropTypes.func.isRequired,
+  };
+
   state = {
     items: [
       { item: "All", className: "selected" },
