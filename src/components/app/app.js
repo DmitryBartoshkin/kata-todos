@@ -19,7 +19,11 @@ export default class App extends Component {
     const doneEl = data.map((obj) => {
       const item = obj
       if (item.id === id) {
-        item.classItem = 'completed'
+        if (item.classItem === '') {
+          item.classItem = 'completed'
+        } else {
+          item.classItem = ''
+        }
       }
       return item
     })
