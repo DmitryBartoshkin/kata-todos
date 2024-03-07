@@ -1,6 +1,7 @@
-import { createRoot } from "react-dom/client";
-import App from "./components/app"
+import { createRoot } from 'react-dom/client'
 
-const section = document.querySelector('section');
-const root = createRoot(section);
-root.render(<App />);
+import App from './components/app'
+
+const section = document.querySelector('section')
+const root = createRoot(section)
+root.render(<App />)

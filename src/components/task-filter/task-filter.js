@@ -1,66 +1,74 @@
-import { Component } from "react";
-import "./task-filter.css";
-import PropTypes from "prop-types";
+import { Component } from 'react'
+import './task-filter.css'
+import PropTypes from 'prop-types'
 
 export default class TaskFilter extends Component {
-  static defaultProps = {
-    onToggleFilter: () => {},
-  };
-
-  static propTypes = {
-    onToggleFilter: PropTypes.func.isRequired,
-  };
-
-  state = {
-    items: [
-      { item: "All", className: "selected" },
-      { item: "Active", className: "" },
-      { item: "Completed", className: "" },
-    ],
-  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      items: [
+        { item: 'All', className: 'selected' },
+        { item: 'Active', className: '' },
+        { item: 'Completed', className: '' },
+      ],
+    }
+  }
 
   onToggle = (e) => {
-    const btnLabel = e.target.textContent;
-    const newArr = this.state.items.map((el) => {
-      el.item === btnLabel ? (el.className = "selected") : (el.className = "");
-      return el;
-    });
+    const btnLabel = e.target.textContent
+    const { items } = this.state
+    const newArr = items.map((el) => {
+      const element = el
+      if (element.item === btnLabel) {
+        element.className = 'selected'
+      } else {
+        element.className = ''
+      }
+      return element
+    })
 
     this.setState({
       items: newArr,
-    });
+    })
 
-    this.props.onToggleFilter(btnLabel);
-  };
+    const { onToggleFilter } = this.props
+    onToggleFilter(btnLabel)
+  }
 
   render() {
+    const { items } = this.state
     const allItems = {
-      all: this.state.items.find((el) => el.item === "All"),
-      active: this.state.items.find((el) => el.item === "Active"),
-      completed: this.state.items.find((el) => el.item === "Completed"),
-    };
+      all: items.find((el) => el.item === 'All'),
+      active: items.find((el) => el.item === 'Active'),
+      completed: items.find((el) => el.item === 'Completed'),
+    }
 
     return (
       <ul className="filters">
         <li>
-          <button className={allItems.all.className} onClick={this.onToggle}>
+          <button type="button" className={allItems.all.className} onClick={this.onToggle}>
             All
           </button>
         </li>
         <li>
-          <button className={allItems.active.className} onClick={this.onToggle}>
+          <button type="button" className={allItems.active.className} onClick={this.onToggle}>
             Active
           </button>
         </li>
         <li>
-          <button
-            className={allItems.completed.className}
-            onClick={this.onToggle}
-          >
+          <button type="button" className={allItems.completed.className} onClick={this.onToggle}>
             Completed
           </button>
         </li>
       </ul>
-    );
+    )
   }
+}
+
+TaskFilter.defaultProps = {
+  onToggleFilter: () => {},
+}
+
+TaskFilter.propTypes = {
+  onToggleFilter: PropTypes.func,
 }

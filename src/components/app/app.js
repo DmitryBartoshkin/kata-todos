@@ -1,99 +1,145 @@
-import NewTaskForm from "../new-task-form";
-import Footer from "../footer";
-import TaskList from "../task-list";
-import "./app.css";
-import { Component } from "react";
-import { formatDistanceToNow } from "date-fns";
+import { Component } from 'react'
+import { formatDistanceToNow } from 'date-fns'
+
+import NewTaskForm from '../new-task-form'
+import Footer from '../footer'
+import TaskList from '../task-list'
+import './app.css'
 
 export default class App extends Component {
-  state = {
-    data: [],
-  };
+  constructor() {
+    super()
+    this.state = {
+      data: [],
+    }
+  }
 
   onDone = (id) => {
-    const doneEl = this.state.data.map((obj) => {
-      if (obj.id === id) {
-        obj.classItem = "completed";
+    const { data } = this.state
+    const doneEl = data.map((obj) => {
+      const item = obj
+      if (item.id === id) {
+        item.classItem = 'completed'
       }
-      return obj;
-    });
+      return item
+    })
 
     this.setState({
       data: doneEl,
-    });
-  };
+    })
+  }
 
   onClearDone = () => {
-    const activeItems = this.state.data.filter(
-      (el) => el.classItem !== "completed"
-    );
+    const { data } = this.state
+    const activeItems = data.filter((el) => el.classItem !== 'completed')
 
     this.setState({
       data: activeItems,
-    });
-  };
+    })
+  }
 
   onDeleted = (id) => {
-    const newArr = this.state.data.filter((el) => el.id !== id);
+    const { data } = this.state
+    const newArr = data.filter((el) => el.id !== id)
 
     this.setState({
       data: newArr,
-    });
-  };
+    })
+  }
 
   onAdded = (description) => {
-    const randomNum = Math.floor(Math.random() * 10000);
+    const { data } = this.state
+    const randomNum = Math.floor(Math.random() * 10000)
 
     const newItem = {
       id: randomNum,
-      classItem: "",
-      description: description,
-      hidden: "",
+      classItem: '',
+      description,
+      hidden: '',
       timeAdded: new Date(),
-      timeFromAdded: "",
-    };
+      timeFromAdded: '',
+    }
 
-    const newArr = this.state.data.concat(newItem);
-    newArr.forEach(
-      (el) =>
-        (el.timeFromAdded = formatDistanceToNow(el.timeAdded, {
-          includeSeconds: true,
-        }))
-    );
+    const newArr = data.concat(newItem)
+    newArr.forEach((el) => {
+      const item = el
+      item.timeFromAdded = formatDistanceToNow(item.timeAdded, {
+        includeSeconds: true,
+      })
+    })
 
     this.setState({
       data: newArr,
-    });
-  };
+    })
+  }
+
+  onEdit = (id) => {
+    const { data } = this.state
+    const newArr = data.map((e) => {
+      const item = e
+      if (item.id === id) {
+        item.classItem = 'editing'
+      }
+      return item
+    })
+
+    this.setState({
+      data: newArr,
+    })
+  }
+
+  onEditDone = (value, id) => {
+    const { data } = this.state
+    const idNum = Number(id)
+    const newArr = data.map((e) => {
+      const item = e
+      if (item.id === idNum) {
+        item.classItem = ''
+        item.description = value
+      }
+      return item
+    })
+
+    this.setState({
+      data: newArr,
+    })
+  }
 
   onToggleFilter = (status) => {
-    let newArr = this.state.data.map((el) => {
-      el.hidden = "";
-      return el;
-    });
+    const { data } = this.state
+    let newArr = data.map((el) => {
+      const item = el
+      item.hidden = ''
+      return item
+    })
 
-    if (status === "Active") {
-      newArr = this.state.data.map((el) => {
-        if (el.classItem === "completed") {
-          el.hidden = "hidden";
+    if (status === 'Active') {
+      newArr = data.map((el) => {
+        const item = el
+        if (item.classItem === 'completed') {
+          item.hidden = 'hidden'
         }
-        return el;
-      });
-    } else if (status === "Completed") {
-      newArr = this.state.data.map((el) => {
-        if (el.classItem !== "completed") {
-          el.hidden = "hidden";
+        return item
+      })
+    } else if (status === 'Completed') {
+      newArr = data.map((el) => {
+        const item = el
+        if (item.classItem !== 'completed') {
+          item.hidden = 'hidden'
         }
-        return el;
-      });
+        return item
+      })
     }
 
     this.setState({
       data: newArr,
-    });
-  };
+    })
+  }
 
   render() {
+    const { data } = this.state
+    const dataLength = data.filter((el) => el.classItem !== 'completed').length
+
     return (
       <>
         <header className="header">
@@ -102,19 +148,15 @@ export default class App extends Component {
         </header>
         <section className="main">
           <TaskList
-            dataTodo={this.state.data}
+            dataTodo={data}
             onDone={this.onDone}
             deleted={this.onDeleted}
+            onEdit={this.onEdit}
+            onEditDone={this.onEditDone}
           />
         </section>
-        <Footer
-          onClearDone={this.onClearDone}
-          numItemsLeft={
-            this.state.data.filter((el) => el.classItem !== "completed").length
-          }
-          onToggleFilter={this.onToggleFilter}
-        />
+        <Footer onClearDone={this.onClearDone} numItemsLeft={dataLength} onToggleFilter={this.onToggleFilter} />
       </>
-    );
+    )
   }
 }
