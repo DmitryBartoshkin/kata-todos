@@ -16,8 +16,8 @@ export default class NewTaskForm extends Component {
     let { minLabel, secLabel } = this.state
     const { label } = this.state
     const { onAdded } = this.props
-    minLabel = minLabel < 10 ? `0${minLabel.slice(-1)}` : minLabel
-    secLabel = secLabel < 10 ? `0${secLabel.slice(-1)}` : secLabel
+    minLabel = minLabel < 10 ? `0${minLabel.slice(-1)}` : minLabel.slice(-2)
+    secLabel = secLabel < 10 ? `0${secLabel.slice(-1)}` : secLabel.slice(-2)
     e.preventDefault()
     onAdded(label, minLabel, secLabel)
     this.setState({

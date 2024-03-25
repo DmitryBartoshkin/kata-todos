@@ -72,7 +72,11 @@ export default class Task extends Component {
   onToggleDone = () => {
     const { onDone } = this.props
     const { isChecked } = this.state
-    this.setState({ isChecked: !isChecked })
+    clearInterval(this.timerId)
+    this.setState({
+      isChecked: !isChecked,
+      timeTick: '00:00',
+    })
     onDone()
   }
 
