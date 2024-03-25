@@ -42,6 +42,7 @@ export default class TaskList extends Component {
           deleted={() => deleted(el.id)}
           onEdit={() => onEdit(el.id)}
           timeFromAdded={el.timeFromAdded}
+          timeTimer={el.timeTimer}
         />
         {el.classItem === 'editing' ? (
           <form onSubmit={this.onEditEnd}>

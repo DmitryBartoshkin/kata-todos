@@ -51,7 +51,7 @@ export default class App extends Component {
     })
   }
 
-  onAdded = (description) => {
+  onAdded = (description, min, sec) => {
     const { data } = this.state
     const randomNum = Math.floor(Math.random() * 10000)
 
@@ -62,6 +62,7 @@ export default class App extends Component {
       hidden: '',
       timeAdded: new Date(),
       timeFromAdded: '',
+      timeTimer: `${min}:${sec}`,
     }
 
     const newArr = data.concat(newItem)

@@ -7,16 +7,23 @@ export default class NewTaskForm extends Component {
     super(props)
     this.state = {
       label: '',
+      minLabel: '',
+      secLabel: '',
     }
   }
 
   onSubmit = (e) => {
+    let { minLabel, secLabel } = this.state
     const { label } = this.state
     const { onAdded } = this.props
+    minLabel = minLabel < 10 ? `0${minLabel.slice(-1)}` : minLabel
+    secLabel = secLabel < 10 ? `0${secLabel.slice(-1)}` : secLabel
     e.preventDefault()
-    onAdded(label)
+    onAdded(label, minLabel, secLabel)
     this.setState({
       label: '',
+      minLabel: '',
+      secLabel: '',
     })
   }
 
@@ -26,11 +33,44 @@ export default class NewTaskForm extends Component {
     })
   }
 
+  onMin = (e) => {
+    this.setState({
+      minLabel: e.target.value,
+    })
+  }
+
+  onSec = (e) => {
+    this.setState({
+      secLabel: e.target.value,
+    })
+  }
+
   render() {
-    const { label } = this.state
+    const { label, minLabel, secLabel } = this.state
     return (
-      <form onSubmit={this.onSubmit}>
-        <input className="new-todo" placeholder="What needs to be done?" onChange={this.onLabel} value={label} />
+      <form className="new-todo-form" onSubmit={this.onSubmit}>
+        <input className="new-todo" placeholder="Task" onChange={this.onLabel} value={label} required />
+        <input
+          className="new-todo-form__timer"
+          type="number"
+          min={0}
+          max={59}
+          placeholder="Min"
+          onChange={this.onMin}
+          value={minLabel}
+          required
+        />
+        <input
+          className="new-todo-form__timer"
+          type="number"
+          min={0}
+          max={59}
+          placeholder="Sec"
+          onChange={this.onSec}
+          value={secLabel}
+          required
+        />
+        <button type="submit" tabIndex={-1} />
       </form>
     )
   }
